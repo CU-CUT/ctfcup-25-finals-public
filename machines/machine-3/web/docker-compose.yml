@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: myt
+      POSTGRES_PASSWORD: myt
+      POSTGRES_DB: myt
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U myt' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://myt:myt@db:5432/myt
+      JWT_SECRET: KHFHfhkKJGJAJGKjgbgkjUETQIUUIABFJQOP1PJGMMAHDS
+      PORT: 3001
+      STORAGE_ROOT: /app/storage
+      CORS_ORIGIN: http://localhost:8080,http://127.0.0.1:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./storage:/app/storage
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: /api
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - '8080:80'
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:

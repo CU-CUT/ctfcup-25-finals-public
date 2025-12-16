@@ -1,0 +1,36 @@
+{
+  "name": "myt-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
+    "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-switch": "^1.0.2",
+    "autoprefixer": "^10.4.14",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.306.0",
+    "next": "^14.0.4",
+    "postcss": "^8.4.23",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.4",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.7",
+    "eslint": "^8.51.0",
+    "eslint-config-next": "^14.0.4",
+    "typescript": "^5.3.2"
+  }
+}
