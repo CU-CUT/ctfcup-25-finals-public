@@ -1,0 +1,25 @@
+services:
+  telegram-bot-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SSH_USER_USERNAME: ${SSH_USER_USERNAME}
+      secrets:
+        - ssh_user_password
+    restart: always
+    environment:
+      TELEGRAM_API_ID: ${TELEGRAM_API_ID}
+      TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
+      TELEGRAM_LOCAL: 1
+    ports:
+      - "8081:8081"
+    volumes:
+      - telegram-bot-api-data:/var/lib/telegram-bot-api
+
+secrets:
+  ssh_user_password:
+    environment: SSH_USER_PASSWORD
+
+volumes:
+  telegram-bot-api-data:

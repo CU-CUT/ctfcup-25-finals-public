@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    hostname: ${DB_SERVICE_HOSTNAME}
+    domainname: ${DB_SERVICE_HOSTNAME}
+
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  bot:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./bot/Dockerfile
+      args:
+        WEBHOOK_PORT: ${WEBHOOK_PORT}
+    hostname: ${BOT_SERVICE_HOSTNAME}
+    domainname: ${BOT_SERVICE_HOSTNAME}
+
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      ADMIN_ID: ${ADMIN_ID}
+      TELEGRAM_BOT_API_URL: ${TELEGRAM_BOT_API_URL}
+
+      WEBHOOK_HOST: ${BOT_SERVICE_HOSTNAME}
+      WEBHOOK_PORT: ${WEBHOOK_PORT}
+      WEBHOOK_PATH: ${WEBHOOK_PATH}
+
+      DB_HOST: ${DB_SERVICE_HOSTNAME}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+
+      SSH_USER_PASSWORD: ${SSH_USER_PASSWORD}
+      DOCS_PUBLIC_URL: ${DOCS_PUBLIC_URL}
+    ports:
+      - "${WEBHOOK_PORT}:${WEBHOOK_PORT}"
+    depends_on:
+      db:
+        condition: service_healthy
+      telegram-bot-api:
+        condition: service_started
+
+  updater:
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./updater/Dockerfile
+    environment:
+      - DB_HOST=${DB_SERVICE_HOSTNAME}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  db-data:

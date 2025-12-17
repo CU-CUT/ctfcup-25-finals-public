@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Цитадель — ОПЕРАТОРная документация | Генератор №1</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#6f42c1;
+      --muted:#6c757d;
+      --panel-bg:linear-gradient(180deg, #0f1724, #081226);
+      --glass: rgba(255,255,255,0.03);
+    }
+    body{background:#050710;color:#e9eef8;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    .navbar-brand{font-weight:700;letter-spacing:0.6px}
+    .hero{
+      background: url('https://images.unsplash.com/photo-1505575967459-1643b1010d0b?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=0b85b9b1') center/cover no-repeat;
+      padding:48px 0;
+      border-radius:12px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.7);
+    }
+    .card{
+        color: #dce7ff;
+    }
+    .card-complex{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03);}
+    .muted-small{color:var(--muted); font-size:0.85rem}
+    .stat-box{backdrop-filter: blur(4px); background:var(--glass); border-left:4px solid rgba(111,66,193,0.85); padding:12px; border-radius:8px;}
+    .flourish{opacity:0.12; font-weight:700}
+    pre.codeblock{background:rgba(0,0,0,0.35); border-radius:6px; padding:12px; color:#dce7ff; overflow:auto}
+    .obf {letter-spacing:0.6px; word-spacing:1.2px}
+    .dense {line-height:1.06}
+    .squish {font-size:0.86rem}
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 mb-4">
+  <a class="navbar-brand d-flex align-items-center" href="#">Цитадель • ОПЕРАТОР</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navCollapse">
+    <ul class="navbar-nav ms-3">
+      <li class="nav-item"><a class="nav-link active" href="#overview">Обзор</a></li>
+      <li class="nav-item"><a class="nav-link" href="#generator">Генератор</a></li>
+      <li class="nav-item"><a class="nav-link" href="#diagnostics">Диагностика</a></li>
+      <li class="nav-item"><a class="nav-link" href="#security">Безопасность</a></li>
+      <li class="nav-item"><a class="nav-link" href="#admin">Администрация</a></li>
+      <li class="nav-item"><a class="nav-link" href="#appendix">Приложения</a></li>
+    </ul>
+    <div class="ms-auto d-flex align-items-center">
+      <span class="badge bg-secondary me-2">Режим: ОПЕРАТОР</span>
+      <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">Помощь</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <section id="overview" class="mb-4">
+    <div class="hero p-4 text-light rounded-3 mb-3">
+      <div class="row">
+        <div class="col-lg-8">
+          <h1 class="display-6 fw-bold">Система управления — Генератор №1</h1>
+          <p class="lead">Интерфейс оператора для контроля параметров энергомодуля.</p>
+        </div>
+        <div class="col-lg-4 text-end">
+          <div class="card card-complex p-3 text-start">
+            <div class="squish dense">
+              <div class="muted-small">Оператор:</div>
+              <div class="fw-bold">Кабинет №1</div>
+              <small class="muted-small">ID системы: <code>GEN-1</code></small>
+              <div class="mt-2">
+                <span class="badge bg-success">Онлайн</span>
+                <span class="badge bg-warning text-dark">Мониторинг</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="stat-box">
+          <div class="muted-small">Текущая мощность</div>
+          <div class="h4 fw-bold" id="ui_power">— МВт</div>
+          <div class="progress mt-2" style="height:8px;">
+            <div id="ui_power_bar" class="progress-bar bg-gradient" style="width:60%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-box">
+          <div class="muted-small">Температура корпуса</div>
+          <div class="h4 fw-bold" id="ui_temp">— °C</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-box">
+          <div class="muted-small">Уровень топлива</div>
+          <div class="h4 fw-bold" id="ui_fuel">— %</div>
+          <small class="muted-small">Динамика: случайные флуктуации, контролируется скриптом АВЕ</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="generator" class="mb-4">
+    <div class="card card-complex p-3 mb-3">
+      <div class="d-flex justify-content-between">
+        <h3 class="h5">Параметры генератора</h3>
+      </div>
+      <div class="row mt-3">
+        <div class="col-md-8">
+          <p class="dense squish">
+            Параметры, отображаемые в интерфейсе, читаются из БД. Периодичность обновления — каждые ~10 секунд.
+          </p>
+
+          <div class="accordion" id="paramsAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                  Детализация — Электрика
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#paramsAccordion">
+                <div class="accordion-body">
+                  <ul>
+                    <li>Напряжение: <span id="ui_voltage">— В</span></li>
+                    <li>Частота: <span id="ui_freq">— Гц</span></li>
+                    <li>Эффективность: <span id="ui_eff">— %</span></li>
+                  </ul>
+                  <small class="muted-small">Значения совпадают с сущностями!</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                  Детализация — Механика
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#paramsAccordion">
+                <div class="accordion-body">
+                  <ul>
+                    <li>Обороты турбины: <span id="ui_rpm">— об/мин</span></li>
+                    <li>Уровень вибрации: <span id="ui_vib">— мм/с</span></li>
+                    <li>Поток охлаждения: <span id="ui_cool">— л/мин</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-4">
+          <div class="card bg-transparent border-0">
+            <div class="card-body p-0">
+              <div class="mb-3">
+                <small class="muted-small">История обновлений</small>
+                <div class="list-group">
+                  <div class="list-group-item list-group-item-dark">[INFO] updater.py — обновлён в 00:00</div>
+                  <div class="list-group-item list-group-item-dark">[INFO] last commit: generator tuning</div>
+                </div>
+              </div>
+              <button class="btn btn-outline-light w-100" data-bs-toggle="modal" data-bs-target="#logsModal">Просмотреть логи</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="diagnostics" class="mb-4">
+    <div class="row g-3">
+      <div class="col-md-7">
+        <div class="card card-complex p-3">
+          <h5 class="mb-2">Диагностика и предупреждения</h5>
+          <p class="squish dense">
+            Диагностика агрегата анализирует доступные метрики и формирует предупреждения. В случае попадания в нестабильное состояние система рекомендует обратиться к логам сервера.
+          </p>
+
+          <div class="alert alert-warning dense" role="alert">
+            <strong>Предупреждение:</strong> Наблюдается нестабильность синхронизации между генераторами.
+            <div class="mt-2 small muted-small">
+              Для подробностей: просмотрите логи на сервере.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <small class="muted-small">Автоматизированные проверки</small>
+            <ul class="squish">
+              <li>Проверка датчиков — OK</li>
+              <li>Связь с узлом синхронизации — нестабильна</li>
+              <li>Контроль избыточного напряжения — OK</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+<!--      <div class="col-md-5">-->
+<!--        <div class="card card-complex p-3">-->
+<!--          <h6>Инструменты диагностики</h6>-->
+<!--          <p class="muted-small squish dense">Встроенные команды АДМИНИСТРАТОРА:</p>-->
+<!--          <pre class="codeblock">-->
+<!--/promote user_id — Повысить пользователя до администратора (только админ)-->
+<!--/get_remote_pass — Вывести пароль для удалённого доступа (только админ)-->
+<!--          </pre>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+  </section>
+
+  <footer class="text-center py-3 text-muted small">
+    © 2025 Цитадель — Служба контроля энергоузлов. Для служебного использования.
+  </footer>
+</div>
+
+<div class="modal fade" id="helpModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Справка оператора</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="squish">Краткий набор действий на случай ошибок:</p>
+        <ul class="squish">
+          <li>1) Проверить логи бота.</li>
+          <li>2) Проверить таблицу в БД.</li>
+          <li>3) В экстренных случаях используйте удаленный доступ.</li>
+        </ul>
+        <hr>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="logsModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Логи (демо)</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <pre class="codeblock dense" id="logsArea">
+[2025-01-01 00:00:00] INFO Starting updater service...
+[2025-01-01 00:00:05] INFO Updated generator data at 2025-01-01 00:00:05
+[2025-01-01 00:00:15] INFO Updated generator data at 2025-01-01 00:00:15
+[2025-01-01 00:00:25] INFO Webhook set to http://0.0.0.0:8080/webhook
+[2025-01-01 00:00:25] INFO Using ADMIN_ID=6698983417
+[2025-01-01 00:00:25] INFO Bot started successfully.
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="backupModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Бэкап — симуляция</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="progress mt-2">
+          <div id="backupBar" class="progress-bar bg-success" style="width:0%">0%</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" data-bs-dismiss="modal">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  (function(){
+    function rnd(min,max,dec=1){ return +(Math.random()*(max-min)+min).toFixed(dec) }
+    function updateUI(){
+      var power = rnd(2000,3000,1)
+      var temp = rnd(70,100,1)
+      var fuel = rnd(50,100,1)
+      var volt = Math.round(rnd(13000,14000,0))
+      var freq = rnd(49.5,50.5,2)
+      var eff = rnd(90,98,1)
+      var rpm = Math.round(rnd(2900,3100,0))
+      var vib = rnd(1.5,3.0,2)
+      var cool = rnd(400,500,1)
+
+      document.getElementById('ui_power').textContent = power + ' МВт'
+      document.getElementById('ui_temp').textContent = temp + '°C'
+      document.getElementById('ui_fuel').textContent = fuel + '%'
+      document.getElementById('ui_voltage').textContent = volt + ' В'
+      document.getElementById('ui_freq').textContent = freq + ' Гц'
+      document.getElementById('ui_eff').textContent = eff + ' %'
+      document.getElementById('ui_rpm').textContent = rpm + ' об/мин'
+      document.getElementById('ui_vib').textContent = vib
+      document.getElementById('ui_cool').textContent = cool + ' л/мин'
+
+      var pperc = Math.min(100, Math.round((power-2000)/10))
+      document.getElementById('ui_power_bar').style.width = pperc + '%'
+      var logs = document.getElementById('logsArea')
+      if (logs) {
+        var now = new Date().toISOString().replace('T',' ').split('.')[0]
+        logs.textContent += '\\n['+now+'] INFO Updated generator data at '+now
+      }
+    }
+
+    updateUI()
+    setInterval(updateUI, 10000)
+
+    var backupBar = document.getElementById('backupBar')
+    if (backupBar) {
+      var v = 0
+      setInterval(function(){
+        v = (v + Math.random()*10) % 100
+        backupBar.style.width = Math.round(v)+'%'
+        backupBar.textContent = Math.round(v)+'%'
+      }, 700)
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+include:
+  - telegram-bot-api/docker-compose.yaml
+  - bot/docker-compose.yaml
+  - root_task/docker-compose.yaml
+  - web/docker-compose.yaml

@@ -1,0 +1,26 @@
+services:
+  root_task:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SSH_USER_USERNAME: "${SSH_USER_USERNAME}"
+      secrets:
+        - ssh_user_password
+        - GENERATOR_RESTART_KEY
+        - GENERATOR_ENABLE_KEY
+        - AUTHOR_MD
+    restart: always
+    ports:
+      - "22:22"
+    tty: true
+
+secrets:
+  ssh_user_password:
+    environment: SSH_USER_PASSWORD
+  GENERATOR_RESTART_KEY:
+    file: ./secrets/GENERATOR_RESTART_KEY
+  GENERATOR_ENABLE_KEY:
+    file: ./secrets/GENERATOR_ENABLE_KEY
+  AUTHOR_MD:
+    file: ./secrets/author.md

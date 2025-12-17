@@ -1,0 +1,25 @@
+services:
+  nginx:
+    restart: always
+    image: nginx:1.23.3
+    volumes:
+      - ./nginx/${WEB_SSL}.conf:/etc/nginx/nginx.conf:ro
+      - ./letsencrypt/:/etc/letsencrypt:ro
+      - ./site:/usr/share/nginx/html:ro
+    ports:
+      - "80:80"
+      - "443:443"
+
+  certbot:
+    restart: always
+    ports:
+      - "6000:80"
+    volumes:
+      - ./letsencrypt/:/etc/letsencrypt/
+    build:
+      context: ./certbot
+      dockerfile: Dockerfile
+      args:
+        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
+        DOMAIN_NAME: ${DOMAIN_NAME}
+    profiles: [generate-certificate]
